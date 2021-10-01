@@ -35,6 +35,7 @@
                     <label>Password:
                         <input type="password" name="password">
                     </label>
+                    <p th:if="${badCredentials==true}" class="error">User or password incorrect</p>
                     <input type="submit" value="login">
                 </form>
             </div>

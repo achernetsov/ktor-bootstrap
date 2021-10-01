@@ -3,6 +3,8 @@ package tech.achernetsov.lab.plugins
 import tech.achernetsov.lab.service.OrdersService
 import io.ktor.application.*
 import io.ktor.auth.*
+import io.ktor.features.*
+import io.ktor.http.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.sessions.*
@@ -21,6 +23,12 @@ fun Application.configureRoutingAndViews() {
             suffix = ".html"
             characterEncoding = "utf-8"
         })
+    }
+
+    install(StatusPages) {
+        status(HttpStatusCode.Unauthorized) {
+            call.respond(ThymeleafContent("login", mapOf("badCredentials" to true)))
+        }
     }
 
     routing {
@@ -42,7 +50,6 @@ fun Application.configureRoutingAndViews() {
         get("/login") {
             call.respond(ThymeleafContent("login", emptyMap()))
         }
-
         authenticate("auth-form") {
             post("/login") {
                 val userName = call.principal<UserIdPrincipal>()?.name.toString()
